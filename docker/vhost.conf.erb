@@ -1,8 +1,41 @@
-<VirtualHost *:8080>
-  LogLevel debug
-  ErrorLog /dev/stderr
-  CustomLog /dev/stdout combined
+ServerName localhost
+Listen 80
+PidFile /tmp/httpd.pid
+Mutex file:/tmp/lock default
+User www-data
+Group www-data
 
+LoadModule auth_basic_module /usr/lib/apache2/modules/mod_auth_basic.so
+LoadModule auth_cas_module /usr/lib/apache2/modules/mod_auth_cas.so
+LoadModule authn_core_module /usr/lib/apache2/modules/mod_authn_core.so
+LoadModule authn_file_module /usr/lib/apache2/modules/mod_authn_file.so
+LoadModule authz_core_module /usr/lib/apache2/modules/mod_authz_core.so
+LoadModule authz_host_module /usr/lib/apache2/modules/mod_authz_host.so
+LoadModule authz_user_module /usr/lib/apache2/modules/mod_authz_user.so
+LoadModule proxy_module /usr/lib/apache2/modules/mod_proxy.so
+LoadModule proxy_http_module /usr/lib/apache2/modules/mod_proxy_http.so
+LoadModule remoteip_module /usr/lib/apache2/modules/mod_remoteip.so
+LoadModule mpm_event_module /usr/lib/apache2/modules/mod_mpm_event.so
+LoadModule access_compat_module /usr/lib/apache2/modules/mod_access_compat.so
+LoadModule env_module /usr/lib/apache2/modules/mod_env.so
+
+CASCookiePath /tmp/cache/
+
+StartServers             2
+MinSpareThreads          25
+MaxSpareThreads          75
+ThreadLimit              64
+ThreadsPerChild          25
+MaxRequestWorkers        150
+MaxConnectionsPerChild   0
+
+DocumentRoot "/var/www"
+
+LogLevel info
+ErrorLog /dev/stderr
+CustomLog /dev/stdout combined
+
+<VirtualHost *:8080>
   ProxyRequests Off
   ProxyPreserveHost On
   RemoteIPHeader X-Forwarded-For
@@ -10,7 +43,7 @@
   ProxyPass / <%= ENV['PROXY_TARGET_URL'] %>
   ProxyPassReverse / <%= ENV['PROXY_TARGET_URL'] %>
 
-<%- if ENV['CAS_ENABLED'] == '1' -%>
+  <%- if ENV['CAS_ENABLED'] == '1' -%>
   CASDebug Off
   CASSSOEnabled On
   CASAllowWildcardCert On
@@ -24,7 +57,7 @@
     AuthName "Proxy"
     Require valid-user
   </Location>
-<%- end -%>
+  <%- end -%>
 
   <Proxy *>
     Require all granted
