@@ -46,7 +46,7 @@ CustomLog /dev/stdout combined
   LoadModule auth_cas_module /usr/lib/apache2/modules/mod_auth_cas.so
 
   CASSSOEnabled On
-  CASDebug Off
+  CASDebug <%= ENV['LOG_LEVEL'] == 'debug' ? 'On': 'Off' %>
   CASCookiePath /tmp/cache/
   CASAllowWildcardCert On
   CASLoginURL <%= ENV['CAS_LOGIN_URL'] %>

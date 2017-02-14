@@ -15,6 +15,7 @@ It runs fine on OpenShift and binds port 8080 per default.
   - `CAS_SERVICE_URL` the domain of the service the proxy is running at, usually this is the URL that you connect to this application afterwards, it is used to tell the CAS service where to redirect back
 - `IPS_ACCESS_WHITELIST` optional comma separated list of IPs/subnets that are allowed to access the proxy
 - `REMOTE_USER_REGEX` optional regex the `REMOTE_USER` must match against (e.g. `!@example.net$`)
+- `LOG_LEVEL` optional log level for Apache (default is `info`)
 
 # Testing it locally
 
