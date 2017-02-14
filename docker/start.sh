@@ -2,4 +2,7 @@
 
 ruby render_template.rb
 
-exec apache2ctl -D FOREGROUND
+mkdir -p /tmp/lock
+mkdir -p /tmp/cache
+
+exec apache2ctl -f /tmp/httpd.conf -D FOREGROUND
