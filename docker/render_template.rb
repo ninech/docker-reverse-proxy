@@ -1,7 +1,7 @@
 require 'erb'
 require 'ostruct'
 
-template    = File.read('vhost.conf.erb')
+template    = File.read('httpd.conf.erb')
 target_path = '/tmp/httpd.conf'
 
 File.write target_path, ERB.new(template, nil, '-').result

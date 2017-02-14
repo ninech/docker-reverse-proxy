@@ -63,6 +63,12 @@ CustomLog /dev/stdout combined
       Require ip <%= ENV['IPS_ACCESS_WHITELIST'].split(',').join(' ') %>
       <%- end -%>
     </RequireAll>
+
+    <%- unless ENV['REMOTE_USER_REGEX'].to_s.empty? -%>
+    RewriteEngine On
+    RewriteCond %{LA-U:REMOTE_USER} <%= ENV['REMOTE_USER_REGEX'] %>
+    RewriteRule .* - [L,F]
+    <%- end -%>
   </Location>
   <%- end -%>
 
