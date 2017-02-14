@@ -16,6 +16,6 @@ RUN a2dissite 000-default
 COPY docker /docker/
 WORKDIR /docker
 
-EXPOSE 80
+EXPOSE 8080
 
 CMD ["./start.sh"]
