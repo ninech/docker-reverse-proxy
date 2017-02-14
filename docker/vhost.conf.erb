@@ -1,4 +1,4 @@
-ServerName metabase.nine.ch
+ServerName localhost
 Listen 8080
 PidFile /tmp/httpd.pid
 Mutex file:/tmp/lock default
@@ -31,7 +31,7 @@ MaxConnectionsPerChild   0
 
 DocumentRoot "/var/www"
 
-LogLevel debug
+LogLevel <%= ENV['LOG_LEVEL'] || 'info' %>
 LogFormat "%h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" combined
 ErrorLog /dev/stderr
 CustomLog /dev/stdout combined
