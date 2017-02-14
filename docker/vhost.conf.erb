@@ -58,13 +58,13 @@ CustomLog /dev/stdout combined
     AuthType cas
     AuthName "Proxy"
     Require valid-user
+    <%- unless ENV['IPS_ACCESS_WHITELIST'].to_s.empty? -%>
+      Require ip <%= ENV['IPS_ACCESS_WHITELIST'].split(',').join(' ') %>
+    <%- end -%>
   </Location>
   <%- end -%>
 
   <Proxy *>
     Require all granted
-  <%- unless ENV['IPS_ACCESS_WHITELIST'].to_s.empty? -%>
-    Require ip <%= ENV['IPS_ACCESS_WHITELIST'].split(',').join(' ') %>
-  <%- end -%>
   </Proxy>
 </VirtualHost>
