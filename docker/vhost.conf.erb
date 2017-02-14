@@ -1,0 +1,35 @@
+<VirtualHost *:80>
+  LogLevel debug
+  ErrorLog /dev/stderr
+  CustomLog /dev/stdout combined
+
+  ProxyRequests Off
+  ProxyPreserveHost On
+  RemoteIPHeader X-Forwarded-For
+
+  ProxyPass / <%= ENV['PROXY_TARGET'] %>
+  ProxyPassReverse / <%= ENV['PROXY_TARGET'] %>
+
+<%- if ENV['CAS_ENABLED'] == '1' -%>
+  CASDebug Off
+  CASSSOEnabled On
+  CASAllowWildcardCert On
+  CASLoginURL <%= ENV['CAS_LOGIN_URL'] %>
+  CASValidateURL <%= ENV['CAS_VALIDATE_URL'] %>
+  CASProxyValidateURL <%= ENV['CAS_PROXY_VALIDATE_URL'] %>
+
+  <Location />
+    CASScope /
+    AuthType cas
+    AuthName "Proxy"
+    Require valid-user
+  </Location>
+<%- end -%>
+
+  <Proxy *>
+    Require all granted
+  <%- unless ENV['IPS_ACCESS_WHITELIST'].to_s.empty? -%>
+    Require ip <%= ENV['IPS_ACCESS_WHITELIST'].split(',').join(' ') %>
+  <%- end -%>
+  </Proxy>
+</VirtualHost>
