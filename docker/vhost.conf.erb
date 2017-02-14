@@ -57,10 +57,12 @@ CustomLog /dev/stdout combined
     CASScope /
     AuthType cas
     AuthName "Proxy"
-    Require valid-user
-    <%- unless ENV['IPS_ACCESS_WHITELIST'].to_s.empty? -%>
+    <RequireAll>
+      Require valid-user
+      <%- unless ENV['IPS_ACCESS_WHITELIST'].to_s.empty? -%>
       Require ip <%= ENV['IPS_ACCESS_WHITELIST'].split(',').join(' ') %>
-    <%- end -%>
+      <%- end -%>
+    </RequireAll>
   </Location>
   <%- end -%>
 
