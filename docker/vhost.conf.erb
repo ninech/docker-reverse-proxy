@@ -50,6 +50,7 @@ CustomLog /dev/stdout combined
   CASLoginURL <%= ENV['CAS_LOGIN_URL'] %>
   CASValidateURL <%= ENV['CAS_VALIDATE_URL'] %>
   CASProxyValidateURL <%= ENV['CAS_PROXY_VALIDATE_URL'] %>
+  CASRootProxiedAs <%= ENV['CAS_SERVICE_URL'] %>
 
   <Location />
     CASScope /

@@ -6,6 +6,7 @@
   - `CAS_LOGIN_URL`
   - `CAS_VALIDATE_URL`
   - `CAS_PROXY_VALIDATE_URL`
+  - `CAS_SERVICE_URL` the domain of this service, will be used for redirection to the CAS service
 - `IPS_ACCESS_WHITELIST` comma separate list of ips/subnets that are allowed to connect
 - `PROXY_TARGET_URL` URL of your application
 
