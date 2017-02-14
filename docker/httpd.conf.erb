@@ -6,7 +6,6 @@ User www-data
 Group www-data
 
 LoadModule auth_basic_module /usr/lib/apache2/modules/mod_auth_basic.so
-LoadModule auth_cas_module /usr/lib/apache2/modules/mod_auth_cas.so
 LoadModule authn_core_module /usr/lib/apache2/modules/mod_authn_core.so
 LoadModule authn_file_module /usr/lib/apache2/modules/mod_authn_file.so
 LoadModule authz_core_module /usr/lib/apache2/modules/mod_authz_core.so
@@ -19,8 +18,6 @@ LoadModule mpm_event_module /usr/lib/apache2/modules/mod_mpm_event.so
 LoadModule access_compat_module /usr/lib/apache2/modules/mod_access_compat.so
 LoadModule env_module /usr/lib/apache2/modules/mod_env.so
 LoadModule rewrite_module /usr/lib/apache2/modules/mod_rewrite.so
-
-CASCookiePath /tmp/cache/
 
 StartServers             2
 MinSpareThreads          25
@@ -46,8 +43,11 @@ CustomLog /dev/stdout combined
   ProxyPassReverse / <%= ENV['PROXY_TARGET_URL'] %>
 
   <%- if ENV['CAS_ENABLED'] == '1' -%>
-  CASDebug Off
+  LoadModule auth_cas_module /usr/lib/apache2/modules/mod_auth_cas.so
+
   CASSSOEnabled On
+  CASDebug Off
+  CASCookiePath /tmp/cache/
   CASAllowWildcardCert On
   CASLoginURL <%= ENV['CAS_LOGIN_URL'] %>
   CASValidateURL <%= ENV['CAS_VALIDATE_URL'] %>
