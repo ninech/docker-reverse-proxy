@@ -31,7 +31,8 @@ MaxConnectionsPerChild   0
 
 DocumentRoot "/var/www"
 
-LogLevel info
+LogLevel debug
+LogFormat "%h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\""
 ErrorLog /dev/stderr
 CustomLog /dev/stdout combined
 
