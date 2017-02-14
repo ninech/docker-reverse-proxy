@@ -7,8 +7,8 @@
   ProxyPreserveHost On
   RemoteIPHeader X-Forwarded-For
 
-  ProxyPass / <%= ENV['PROXY_TARGET'] %>
-  ProxyPassReverse / <%= ENV['PROXY_TARGET'] %>
+  ProxyPass / <%= ENV['PROXY_TARGET_URL'] %>
+  ProxyPassReverse / <%= ENV['PROXY_TARGET_URL'] %>
 
 <%- if ENV['CAS_ENABLED'] == '1' -%>
   CASDebug Off
