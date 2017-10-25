@@ -39,14 +39,6 @@ CustomLog /dev/stdout combined
   ProxyPreserveHost On
   RemoteIPHeader X-Forwarded-For
 
-  <%- if ENV['HEALTHCHECK_ENABLED'] == '1' -%>
-  ProxyPass /health <%= ENV['PROXY_TARGET_URL'] %>/<%= ENV['HEALTHCHECK_TARGET_PATH'] %>
-  ProxyPassReverse /health <%= ENV['PROXY_TARGET_URL'] %>/<%= ENV['HEALTHCHECK_TARGET_PATH'] %>
-  <%- end -%>
-
-  ProxyPass / <%= ENV['PROXY_TARGET_URL'] %>
-  ProxyPassReverse / <%= ENV['PROXY_TARGET_URL'] %>
-
   <%- if ENV['CAS_ENABLED'] == '1' -%>
   LoadModule auth_cas_module /usr/lib/apache2/modules/mod_auth_cas.so
 
@@ -75,15 +67,24 @@ CustomLog /dev/stdout combined
     RewriteCond %{LA-U:REMOTE_USER} <%= ENV['REMOTE_USER_REGEX'] %>
     RewriteRule .* - [L,F]
     <%- end -%>
+
+    ProxyPass <%= ENV['PROXY_TARGET_URL'] %>
+    ProxyPassReverse <%= ENV['PROXY_TARGET_URL'] %>
   </Location>
   <%- end -%>
 
   <%- if ENV['HEALTHCHECK_ENABLED'] == '1' -%>
+  ProxyPass /<%= ENV['HEALTHCHECK_TARGET_PATH'] %> <%= ENV['PROXY_TARGET_URL'] %><%= ENV['HEALTHCHECK_TARGET_PATH'] %>
+  ProxyPassReverse /<%= ENV['HEALTHCHECK_TARGET_PATH'] %> <%= ENV['PROXY_TARGET_URL'] %><%= ENV['HEALTHCHECK_TARGET_PATH'] %>
+
   <LocationMatch "^/health$">
     AuthType none
     <%- unless ENV['HEALTHCHECK_IPS'].to_s.empty? -%>
     Require ip <%= ENV['HEALTHCHECK_IPS'].split(',').join(' ') %>
     <%- end -%>
+
+    RewriteEngine On
+    RewriteRule ^/health$ /<%= ENV['HEALTHCHECK_TARGET_PATH'] %> [L,PT]
   </LocationMatch>
   <%- end -%>
 
