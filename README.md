@@ -16,7 +16,7 @@ It runs fine on OpenShift and binds port 8080 per default.
 - `IPS_ACCESS_WHITELIST` optional comma separated list of IPs/subnets that are allowed to access the proxy
 - `REMOTE_USER_REGEX` optional regex the `REMOTE_USER` must match against (e.g. `!@example.net$`)
 - `LOG_LEVEL` optional log level for Apache (default is `info`)
-- `HEALTHCHECK_ENABLED` when enabled, this will proxy /health to the given target path (see below) of the target URL (disabled by default)
+- `HEALTHCHECK_ENABLED` when enabled, this will proxy /health (no authentication needed) to the given target path (see below) of the target URL (disabled by default)
   - `HEALTHCHECK_TARGET_PATH` target path for the health check on the target url (`PROXY_TARGET_URL`)
   - `HEALTHCHECK_IPS` optional comma separated list of IPs/subnets that are allowed to access the /health endpoint
 
