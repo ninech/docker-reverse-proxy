@@ -50,10 +50,27 @@ CustomLog /dev/stdout combined
   CASValidateURL <%= ENV['CAS_VALIDATE_URL'] %>
   CASProxyValidateURL <%= ENV['CAS_PROXY_VALIDATE_URL'] %>
   CASRootProxiedAs <%= ENV['CAS_SERVICE_URL'] %>
+  <%- end -%>
+
+  <%- if ENV['OIDC_ENABLED'] == '1' -%>
+  LoadModule auth_openidc_module /usr/lib/apache2/modules/mod_auth_openidc.so
+
+  OIDCProviderMetadataURL <%= ENV['OIDC_PROVIDER_METADATA_URL'] %>
+  OIDCClientID <%= ENV['OIDC_CLIENT_ID'] %>
+  OIDCClientSecret <%= ENV['OIDC_CLIENT_SECRET'] %>
+  OIDCRedirectURI <%= ENV['OIDC_REDIRECT_URL'] %>
+  OIDCCryptoPassphrase <%= ENV['OIDC_CRYPTO_PASSPHRASE'] %>
+  OIDCProviderTokenEndpointAuth client_secret_basic
+  <%- end -%>
 
   <Location />
+    <%- if ENV['CAS_ENABLED'] == '1' -%>
     CASScope /
     AuthType cas
+    <%- elsif ENV['OIDC_ENABLED'] == '1' %>
+    AuthType openid-connect
+    <%- end -%>
+
     AuthName "Proxy"
     <RequireAll>
       Require valid-user
@@ -71,7 +88,6 @@ CustomLog /dev/stdout combined
     ProxyPass <%= ENV['PROXY_TARGET_URL'] %>
     ProxyPassReverse <%= ENV['PROXY_TARGET_URL'] %>
   </Location>
-  <%- end -%>
 
   <%- if ENV['HEALTHCHECK_ENABLED'] == '1' -%>
   ProxyPass /<%= ENV['HEALTHCHECK_TARGET_PATH'] %> <%= ENV['PROXY_TARGET_URL'] %><%= ENV['HEALTHCHECK_TARGET_PATH'] %>
